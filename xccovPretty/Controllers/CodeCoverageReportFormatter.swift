@@ -27,9 +27,9 @@
 import Foundation
 
 
-/// `CodeCoverageReportFormatter`s convert `CodeCoverageFormat` objects into strings. Strings output by the formatter
-/// look like: "*lineCoverage* (*coveredLines*/*executableLines*)". For example, if line coverage is 0.85, covered lines
-/// is 85, and executable lines is 100, the output string would be "85.00% (85/100)".
+/// `CodeCoverageReportFormatter`s convert `CodeCoverageReport`s into strings. Strings output by the formatter look
+/// like: "*lineCoverage* (*coveredLines*/*executableLines*)". For example, if line coverage is 0.85, covered lines is
+/// 85, and executable lines is 100, the output string would be "85.00% (85/100)".
 final class CodeCoverageReportFormatter : Formatter {
     /// The number formatter used to format line coverage information.
     lazy var lineCoverageFormatter: NumberFormatter = {
