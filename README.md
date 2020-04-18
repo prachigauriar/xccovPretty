@@ -23,7 +23,13 @@ a combination of the `DSTROOT` and `INSTALL_PATH`. For example, `DSTROOT=$HOME` 
 
 ## Usage
 
-To use `xccovPretty`, just pipe the output of `xccov view --json` to `xccovPretty`.
+To use `xccovPretty`, just pipe the output of `xccov view --report «PATH» --json` to `xccovPretty`.
+If you run it often, you should consider creating a shell function and putting it in your shell
+startup file (`.zshrc`, `.bashrc`, etc.):
+
+    ppcov() {
+        xcrun xccov view --report "$1" --json | xccovPretty
+    }
 
 To learn more about `xccov`, read the [manpage](x-man-page://xccov) or check out
 [XCBlog’s helpful article](https://medium.com/xcblog/xccov-xcode-code-coverage-report-for-humans-466a4865aa18).
@@ -31,7 +37,7 @@ To learn more about `xccov`, read the [manpage](x-man-page://xccov) or check out
 
 ## Example
 
-    % xcrun xccov view --json /path/to/action.xccovreport | xccovPretty
+    % ppcov /path/to/report.xcresult
     GrubAPI.framework                                               99.37% (1585/1595)
         /Users/pgauriar/Developer/GrubAPI/GrubAPI/
             Authentication/
