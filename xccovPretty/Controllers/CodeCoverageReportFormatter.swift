@@ -28,11 +28,11 @@ import Foundation
 
 
 /// `CodeCoverageReportFormatter`s convert `CodeCoverageReport`s into strings. Strings output by the formatter look
-/// like: "*lineCoverage* (*coveredLines*/*executableLines*)". For example, if line coverage is 0.85, covered lines is
-/// 85, and executable lines is 100, the output string would be "85.00% (85/100)".
+/// like: "*lineCoverage* (*coveredLines* of *executableLines*)". For example, if line coverage is 0.8335, covered
+/// lines is 85023, and executable lines is 102004, the output string would be "83.35% (85,023 of 102,004)".
 final class CodeCoverageReportFormatter : Formatter {
     /// The number formatter used to format line coverage information.
-    lazy var lineCoverageFormatter: NumberFormatter = {
+    private lazy var lineCoverageFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .percent
         formatter.minimumFractionDigits = 2
@@ -40,6 +40,14 @@ final class CodeCoverageReportFormatter : Formatter {
         return formatter
     }()
 
+
+    /// The number formatter used to format line coverage information.
+    private lazy var lineCountFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        return formatter
+    }()
+    
 
     override func string(for obj: Any?) -> String? {
         return (obj as? CodeCoverageReport).map { string(from: $0) }
@@ -52,6 +60,8 @@ final class CodeCoverageReportFormatter : Formatter {
     /// - Returns: A string representation of `report`.
     func string(from report: CodeCoverageReport) -> String {
         let lineCoverageString = lineCoverageFormatter.string(from: report.lineCoverage as NSNumber)!
-        return "\(lineCoverageString) (\(report.coveredLines)/\(report.executableLines))"
+        let coveredLinesString = lineCountFormatter.string(from: report.coveredLines as NSNumber)!
+        let executableLinesString = lineCountFormatter.string(from: report.executableLines as NSNumber)!
+        return "\(lineCoverageString) (\(coveredLinesString) of \(executableLinesString))"
     }
 }
