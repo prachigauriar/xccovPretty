@@ -52,10 +52,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4CDA08DD2191FBB400B51B9D = {
+		4C64A4D125B7AB8700944786 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
 				4CDA08E82191FBB400B51B9D /* xccovPretty */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		4CDA08DD2191FBB400B51B9D = {
+			isa = PBXGroup;
+			children = (
+				4C64A4D125B7AB8700944786 /* Sources */,
 				4CDA08E72191FBB400B51B9D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -126,7 +134,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1010;
-				LastUpgradeCheck = 1130;
+				LastUpgradeCheck = 1230;
 				ORGANIZATIONNAME = "Prachi Gauriar";
 				TargetAttributes = {
 					4CDA08E52191FBB400B51B9D = {
@@ -198,6 +206,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -259,6 +268,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;

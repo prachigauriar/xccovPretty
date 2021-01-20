@@ -30,9 +30,9 @@ import Foundation
 /// `CodeCoverageReportFormatter`s convert `CodeCoverageReport`s into strings. Strings output by the formatter look
 /// like: "*lineCoverage* (*coveredLines* of *executableLines*)". For example, if line coverage is 0.8335, covered
 /// lines is 85023, and executable lines is 102004, the output string would be "83.35% (85,023 of 102,004)".
-final class CodeCoverageReportFormatter : Formatter {
+struct CodeCoverageReportFormatter {
     /// The number formatter used to format line coverage information.
-    private lazy var lineCoverageFormatter: NumberFormatter = {
+    private static var lineCoverageFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .percent
         formatter.minimumFractionDigits = 2
@@ -42,15 +42,20 @@ final class CodeCoverageReportFormatter : Formatter {
 
 
     /// The number formatter used to format line coverage information.
-    private lazy var lineCountFormatter: NumberFormatter = {
+    private static var lineCountFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         return formatter
     }()
-    
 
-    override func string(for obj: Any?) -> String? {
-        return (obj as? CodeCoverageReport).map { string(from: $0) }
+
+    private var lineCoverageFormatter: NumberFormatter {
+        type(of: self).lineCoverageFormatter
+    }
+
+
+    private var lineCountFormatter: NumberFormatter {
+        type(of: self).lineCountFormatter
     }
 
 

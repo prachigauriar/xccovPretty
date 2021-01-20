@@ -71,7 +71,7 @@ struct CodeCoverageTable : CustomStringConvertible {
 
     var description: String {
         let nameColumnWidth = rows.reduce(0) { (maxWidth, row) in
-            return max(maxWidth, row.name.count + row.indentationLevel * 4)
+            return max(maxWidth, row.name.count + row.indentationWidth)
         }
 
         return rows.reduce(into: "") { (string, row) in
@@ -120,9 +120,11 @@ struct CodeCoverageTable : CustomStringConvertible {
     ///     multiple empty directories into a single node.
     ///   - indentationLevel: The indentation level for the top-level node.
     /// - Returns: The rows containing the node’s code coverage information.
-    private static func rows(for node: CodeCoverageFileNode,
-                             namePrefix: String = "",
-                             indentationLevel: Int = 0) -> [Row] {
+    private static func rows(
+        for node: CodeCoverageFileNode,
+        namePrefix: String = "",
+        indentationLevel: Int = 0
+    ) -> [Row] {
         // Generate the name to use for the top-level node
         let name = "\(namePrefix)\(node.name)\(node.isDirectory ? "/" : "")"
 
@@ -133,15 +135,17 @@ struct CodeCoverageTable : CustomStringConvertible {
 
         // Create a top-level row
         var fileRows = [
-            Row(name: name,
+            Row(
+                name: name,
                 coverageSummary: node.codeCoverageReport.map { codeCoverageReportFormatter.string(from: $0) } ?? "",
-                indentationLevel: indentationLevel)
+                indentationLevel: indentationLevel
+            )
         ]
 
         // Sort the child nodes in ascending order by name
-        let sortedChildNodes = node.children.sorted(by: { (lhs, rhs) in
-            return lhs.key.localizedCompare(rhs.key) == .orderedAscending
-        }).map { $0.value }
+        let sortedChildNodes = node.children
+            .sorted { $0.key.localizedCompare($1.key) == .orderedAscending }
+            .map { $0.value }
 
         // Generate rows for each of the children and append them to our list of rows
         fileRows.append(contentsOf: sortedChildNodes.flatMap { rows(for: $0, indentationLevel: indentationLevel + 1) })
