@@ -63,9 +63,11 @@ struct CodeCoverageTable : CustomStringConvertible {
 
     /// Creates a new `CodeCoverageTable` for the specified project code coverage report.
     ///
-    /// - Parameter projectReport: The project code coverage report that the `CodeCoverageTable` summarizes.
-    init(projectReport: ProjectCodeCoverageReport) {
-        self.rows = CodeCoverageTable.rows(for: projectReport)
+    /// - Parameters:
+    ///   - projectReport: The project code coverage report that the `CodeCoverageTable` summarizes.
+    ///   - includedTargetNames: The target names to include in the report. If `nil`, all targets are included.
+    init(projectReport: ProjectCodeCoverageReport, includedTargetNames: [String]?) {
+        self.rows = CodeCoverageTable.rows(for: projectReport, includedTargetNames: includedTargetNames)
     }
 
 
@@ -88,10 +90,21 @@ struct CodeCoverageTable : CustomStringConvertible {
 
     /// Returns rows that represent the data in the specified project code coverage report.
     ///
-    /// - Parameter projectReport: The project code coverage report for which to return rows.
+    /// - Parameters:
+    ///   - projectReport: The project code coverage report for which to return rows.
+    ///   - includedTargetNames: The target names to include in the report. If `nil`, all targets are included.
     /// - Returns: The rows containing the project’s code coverage information.
-    private static func rows(for projectReport: ProjectCodeCoverageReport) -> [Row] {
-        return projectReport.targets.flatMap { rows(for: $0) }
+    private static func rows(
+        for projectReport: ProjectCodeCoverageReport,
+        includedTargetNames: [String]?
+    ) -> [Row] {
+        return projectReport.targets.flatMap { (targetReport) -> [Row] in
+            guard includedTargetNames?.contains(targetReport.name) ?? true else {
+                return []
+            }
+
+            return rows(for: targetReport)
+        }
     }
 
 
@@ -100,6 +113,12 @@ struct CodeCoverageTable : CustomStringConvertible {
     /// - Parameter targetReport: The target code coverage report for which to return rows.
     /// - Returns: The rows containing the target’s code coverage information.
     private static func rows(for targetReport: TargetCodeCoverageReport) -> [Row] {
+        // If the target has no files, skip it. This works around an issue in test reports on SwiftPM packages where
+        // you get a duplicate empty
+        guard !targetReport.files.isEmpty else {
+            return []
+        }
+
         // Create a target tree node for the
         let targetTreeNode = CodeCoverageFileNode(name: targetReport.name)
         targetTreeNode.codeCoverageReport = targetReport

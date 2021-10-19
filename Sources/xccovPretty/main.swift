@@ -70,7 +70,17 @@ func jsonDecodedProjectReport(from fileHandle: FileHandle) -> ProjectCodeCoverag
 }
 
 
+func includedTargetNames() -> [String]? {
+    guard let includeTargetsString = UserDefaults.standard.string(forKey: "includeTargets") else {
+        return nil
+    }
+
+    let targetNames = includeTargetsString.split(separator: ",", omittingEmptySubsequences: true).map(String.init(_:))
+    return targetNames.isEmpty ? nil : targetNames
+}
+
+
 // Decode the project report from standard input, create a code coverage table, and print it to the console
 let projectReport = jsonDecodedProjectReport(from: .standardInput)
-let codeCoverageTable = CodeCoverageTable(projectReport: projectReport)
+let codeCoverageTable = CodeCoverageTable(projectReport: projectReport, includedTargetNames: includedTargetNames())
 print(codeCoverageTable)
